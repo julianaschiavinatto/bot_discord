@@ -39,6 +39,4 @@ async def switch(ctx:commands.Context):
     await ctx.reply('Você não tem permissão para essa ação.')
 
 
-
 bot.run(os.getenv("DISCORD_TOKEN"))
-
