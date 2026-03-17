@@ -1,7 +1,10 @@
-from googleapiclient.discovery import build
-import os
-import dotenv
 import logging
+import os
+
+from services.youtube.utils import parse_search_response
+
+from googleapiclient.discovery import build
+import dotenv
 
 logger = logging.getLogger(__name__)
 dotenv.load_dotenv()
@@ -16,7 +19,8 @@ class YoutubeService:
         except Exception as e:
             logger.error(f"Error initializing YouTube service: {e}")
 
-    def search_videos(self, query, max_results=5):
+    async def search_videos(self, query, max_results=5):
+        logging.info(f"Searching for videos with query: '{query}'")
         request = self.youtube.search().list(
             q=query,
             part='snippet',
@@ -24,4 +28,4 @@ class YoutubeService:
             maxResults=max_results
         )
         response = request.execute()
-        return response.get('items', [])
+        return await parse_search_response(response.get('items', []))
